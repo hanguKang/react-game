@@ -5,45 +5,48 @@ const initialGameBoard : Array<[null | string, null | string, null | string]> = 
     [null, null, null],
 ]
 
-export default function Gameboard(){
-    const [data, setData] = useState(initialGameBoard)
-    const [xoData, setXoData] = useState(true)
-
-    const handleDate = (row: number, col: number) => {
-    //console.log(row, col); //1. 잘 나타난다.
-        return function () {
-        console.log(row, col); //2. 반응이 없다.
-        // 새로운 배열 생성 (불변성 유지)
-        const newData = data.map((rowData, rowIdx) =>
-            rowIdx === row
-            ? [
-                col === 0 ? (xoData ? 'X' : 'O') : rowData[0],
-                col === 1 ? (xoData ? 'X' : 'O') : rowData[1],
-                col === 2 ? (xoData ? 'X' : 'O') : rowData[2],
-                ]
-            : rowData
-        ) as Array<[null | string, null | string, null | string]>;
-
-
-        // 상태 업데이트
-        setData(newData);
-        setXoData((prev) => !prev); // 플레이어 교체
-
-        //console.log(newData);
-    };
+type GameTurn = {
+    activeSquare: { row: number; col: number };
+    player: string;
   };
+type GameLog = [GameTurn, string[][]];
+interface GameBoardFm{
+    onSelectSquare:(row:number, col:number, newData:Array<[null | string, null | string, null | string]>)=>void
+    activePlayerSymbol?:string,
+    turns: GameLog[]
+}
+export default function Gameboard({onSelectSquare, turns }:GameBoardFm){
+
+    const handleData = (row: number, col: number, data:Array<[null | string, null | string, null | string]>) => {
+        return function (){
+            onSelectSquare(row, col, data);
+        }
+    }
+
+    const gameBoard = initialGameBoard;
+
+    for( const turn of turns ){
+        const [gameTurn] = turn; //const [{activeSquare, player},] = turn은 에러가 왜 나지? 이미 interface로 타입을 모두 지정했는데
+        const {activeSquare, player} = gameTurn;
+        const {row, col} = activeSquare;
+        gameBoard[row][col] = player;
+        // const [{activeSquare, player},] = turn
+        // const {row, col} = activeSquare;
+        // gameBoard[row][col] = player;
+    }
+
 
     return(
         <ol id="game-board">
             { 
-                data.map((rowDatas, rowIndex)=>(
+                 gameBoard.map((rowDatas, rowIndex)=>(
                     <li key={rowIndex}>
                         <ol>
                             {
                                 rowDatas.map((colData, colIndex)=>(
-                                    <li key={colIndex} onClick={handleDate(rowIndex, colIndex)}>
-                                        { !data[rowIndex][colIndex]?'':data[rowIndex][colIndex]}
-                                    </li>
+                                    <li key={colIndex}>
+                                        <button onClick={handleData(rowIndex, colIndex, gameBoard)}>{ !gameBoard[rowIndex][colIndex]?'':gameBoard[rowIndex][colIndex]}</button>
+                                    </li > 
                                     ) // return jsx
                                 )//inner map end
                             }

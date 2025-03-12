@@ -3,9 +3,10 @@ import {ReactElement, useState} from 'react';
 interface PlayerConts{
     name:string;
     symbol:string;
+    isActive: boolean;
     //children:React.ReactNode;
 }
-export default function Player({name, symbol}:PlayerConts){
+export default function Player({name, symbol, isActive }:PlayerConts){
     const [isEditing, setIsEditing] = useState(false);
     const [playerName, setPlayerName] = useState(name);
 
@@ -27,7 +28,7 @@ export default function Player({name, symbol}:PlayerConts){
         btnCaption = "Save";
     }
     return(
-            <li>
+            <li className={isActive?'active':''}>
                 <span className="player">
                      {playerNameDisplay}
                     <span className="player-sybol">{symbol}</span>
