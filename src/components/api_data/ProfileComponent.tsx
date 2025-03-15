@@ -4,9 +4,7 @@ import {useState} from 'react'
 export default  function ProfileComponent(){
     const [profile, setProfile] = useState<string|null>(null);
 
-    const doProfile = (name:string)=>{
-        setProfile(name);
-    }
+
 
     const fetchData = async ()=>{
         try{
@@ -20,12 +18,17 @@ export default  function ProfileComponent(){
                     }
                 });
                 //console.log(response.data.profile.name);
-                doProfile(response.data.profile.name);
+                setProfile(response.data.profile.name);
         }catch (error){
             console.error(error);
         }
     } 
     fetchData();
+    if(profile){
+        return (
+            <div className="text-blue-800">{profile}</div>
+        )
+    }
     return (
         <div className="text-green-800">profile loading...</div>
     )
