@@ -1,5 +1,5 @@
 //import React, { useState } from 'react';
-import React, {useState, Suspense} from 'react';
+import React, {useCallback,useState, Suspense} from 'react';
 import logo from '../../assets/game-logo.png'
 import LazyPlaceholder from '../LazyPlaceholder';
 import ProfileComponent from '../api_data/ProfileComponent';
@@ -8,9 +8,9 @@ import ProfileComponent from '../api_data/ProfileComponent';
 export default function Header (){
     //const [isImgLoaded, setIsImgLoaded] = useState(false);
     const [profileKey, setProfileKey] = useState(0);
-    const LazyImg = React.lazy( ()=> { 
+    const LazyImg = useCallback(React.lazy( ()=> { 
         return  import('./BigSizeImg') }
-    );
+    ),[]);
 
     // const handleImgLoad = ()=>{
     //     setIsImgLoaded(true);

@@ -4,15 +4,20 @@ interface PlayerConts{
     name:string;
     symbol:string;
     isActive: boolean;
+    onChangeName: (symbol:string, name:string) => void
     //children:React.ReactNode;
 }
-export default function Player({name, symbol, isActive }:PlayerConts){
+export default function Player({name, symbol, isActive, onChangeName }:PlayerConts){
     const [isEditing, setIsEditing] = useState(false);
     const [playerName, setPlayerName] = useState(name);
 
     const handlePlayerName = ()=>{
         
         setIsEditing(editing => !editing); 
+        if(isEditing){ // 바로 실행되지 않는다. isEditing 상태 업데이트 된 이후에 실행
+            //console.log('player컴포넌트', symbol, playerName);
+            onChangeName(symbol, playerName);
+        }
     }
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>)=>{
         setPlayerName(event.target.value);
