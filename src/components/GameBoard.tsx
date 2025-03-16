@@ -25,7 +25,7 @@ export default function Gameboard({ board , onSelected }:GameBoardProps){
                         { 
                             rowData.map( (colData, colIndex)=>(
                                 <li key={`${rowIndex}_${colIndex}`}>
-                                    <button onClick={handleClick(rowIndex, colIndex)}>{colData?colData:''}</button>
+                                    <button onClick={handleClick(rowIndex, colIndex)} disabled={colData?true:false}>{colData?colData:''}</button>
                                 </li>
                             ))
                         }
